@@ -1,135 +1,122 @@
-﻿@model CetBookStore.Models.Book
+@model CetBookStore.Models.Book
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Title;
 }
 
-<h1>Details</h1>
+<div class="row g-4">
+    <div class="col-lg-8">
+        <nav aria-label="breadcrumb" class="small mb-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Books" asp-action="Index">Books</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+            </ol>
+        </nav>
 
-<div>
-    <h4>Book</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Author)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Publisher)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Publisher)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PageCount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PageCount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsInSale)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsInSale)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PreviousPrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PreviousPrice)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PublicationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PublicationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-    </dl>
-</div>
+        <h1 class="h3 mb-2">@Model.Title</h1>
+        <p class="text-muted mb-3">@Model.Author · @(Model.Category?.Name ?? "—")</p>
 
+        <div class="card store-card shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted mb-2">About</h2>
+                <p class="mb-0">@Model.Description</p>
+            </div>
+        </div>
 
+        <div class="card store-card shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted mb-3">Details</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-sm-4">Publisher</dt>
+                    <dd class="col-sm-8">@Model.Publisher</dd>
+                    <dt class="col-sm-4">Pages</dt>
+                    <dd class="col-sm-8">@Model.PageCount</dd>
+                    <dt class="col-sm-4">Published</dt>
+                    <dd class="col-sm-8">@Model.PublicationDate.ToShortDateString()</dd>
+                    <dt class="col-sm-4">Added to store</dt>
+                    <dd class="col-sm-8">@Model.CreatedDate.ToShortDateString()</dd>
+                    @if (Model.IsInSale)
+                    {
+                        <dt class="col-sm-4">Sale</dt>
+                        <dd class="col-sm-8">Was @Model.PreviousPrice.ToString("N2") ₺</dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
 
-
-<div class="row d-flex justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-            <div class="card-body p-4">
-                <div data-mdb-input-init class="form-outline mb-4">
-                    <form asp-action="CommentCreate" >
-                        <input type="text" name="UserName" class="form-control" placeholder="Who you are .." />
-                        <input type="text" name="Content" class="form-control" placeholder="Type comment..." />
-                        <input type="hidden" name="BookId" value="@Model.Id" />
-                        <button class="form-label" type="submit">+ Add a note</button>
-                    
-                    </form>
-                </div>
-   @foreach (var comment in Model.Comments)
+    <div class="col-lg-4">
+        <div class="card store-card shadow-sm sticky-lg-top" style="top: 1rem;">
+            <div class="card-body">
+                <p class="h4 mb-1">@Model.Price.ToString("N2") ₺</p>
+                @if (Model.IsInSale)
                 {
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <p>@comment.Content</p>
-
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex flex-row align-items-center">
-                                 
-                                    <p class="small mb-0 ms-2">@comment.UserName</p>
-                                </div>
-                                <div class="d-flex flex-row align-items-center">
-                                    <p class="small text-muted mb-0">@comment.CreatedDate.ToShortDateString()</p>
-                          
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
+                    <p class="small text-success mb-3">On sale</p>
+                }
+                else
+                {
+                    <p class="small text-muted mb-3">Standard price</p>
                 }
 
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-controller="Cart" asp-action="Add" method="post" class="mb-0">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="bookId" value="@Model.Id" />
+                        <label class="form-label small" for="qty">Quantity</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="qty" name="quantity" value="1" min="1" class="form-control" />
+                            <button type="submit" class="btn btn-primary">Add to cart</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <p class="small text-muted mb-2">Log in to add this book to your cart.</p>
+                    <a class="btn btn-outline-primary w-100" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+                }
             </div>
         </div>
     </div>
 </div>
 
+<div class="row justify-content-center mt-2">
+    <div class="col-lg-10">
+        <div class="card store-card shadow-sm border-0 bg-light mt-4">
+            <div class="card-body p-4">
+                <h2 class="h6 mb-3">Comments</h2>
+                <form asp-action="CommentCreate" method="post" class="mb-4">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" name="UserName" class="form-control form-control-sm" placeholder="Your name" />
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" name="Content" class="form-control form-control-sm" placeholder="Write a comment..." />
+                        </div>
+                    </div>
+                    <input type="hidden" name="BookId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-sm btn-secondary mt-2">Post comment</button>
+                </form>
 
-
-
-
-
+                @if (Model.Comments != null && Model.Comments.Any())
+                {
+                    @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedDate))
+                    {
+                        <div class="border-top pt-3 mt-3">
+                            <p class="mb-1">@comment.Content</p>
+                            <p class="small text-muted mb-0">@comment.UserName · @comment.CreatedDate.ToShortDateString()</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="small text-muted mb-0">No comments yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

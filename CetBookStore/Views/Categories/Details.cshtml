@@ -1,66 +1,46 @@
-﻿@model CetBookStore.Models.Category
+@model CetBookStore.Models.Category
 
 @{
     ViewData["Title"] = Model.Name;
 }
 
-<h1>@Model.Name</h1>
-<hr />
+<div class="page-heading">
+    <h1 class="h3 mb-1">@Model.Name</h1>
+    <p class="text-muted small mb-0">Books in this category.</p>
+</div>
 
-
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-               Title
-            </th>
-            
-            <th>
-                Author
-            </th>
-            <th>
-               Publisher
-            </th>
-           
-            <th>
-               Price
-            </th>
-            
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Books)
-        {
+<div class="table-responsive card store-card shadow-sm mt-3">
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
             <tr>
-                <td>
-                    <a asp-action="Details" asp-controller="Books" asp-route-id="@item.Id"> @Html.DisplayFor(modelItem => item.Title)</a>
-                </td>
-               
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Publisher)
-                </td>
-               
-                <td>
-                    @if (item.IsInSale) { <span  class="text-danger text-decoration-line-through"> @item.PreviousPrice </span> }
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-               
-                <td>
-                    <a asp-action="" asp-route-id="@item.Id">Buy Now</a> |
-                    <a asp-action="" asp-route-id="@item.Id">Add to Basket</a> 
-                    
-                </td>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th class="text-end">Price</th>
+                <th style="width: 8rem;"></th>
             </tr>
-        }
-    </tbody>
-</table>
-
-
-
-
-
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Books ?? Enumerable.Empty<Book>())
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Books" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                    </td>
+                    <td>@item.Author</td>
+                    <td>@item.Publisher</td>
+                    <td class="text-end">
+                        @if (item.IsInSale)
+                        {
+                            <span class="text-muted text-decoration-line-through small me-1">@item.PreviousPrice.ToString("N2")</span>
+                        }
+                        @item.Price.ToString("N2") ₺
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-controller="Books" asp-action="Details" asp-route-id="@item.Id">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

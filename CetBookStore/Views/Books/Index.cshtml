@@ -1,16 +1,20 @@
-﻿@model IEnumerable<CetBookStore.Models.Book>
+@model IEnumerable<CetBookStore.Models.Book>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "All books";
 }
 
-<h1>Index</h1>
+<div class="page-heading d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <div>
+        <h1 class="h3 mb-0">All books</h1>
+        <p class="text-muted small mb-0">Full list from the database.</p>
+    </div>
+    <a class="btn btn-sm btn-outline-secondary" asp-action="Create">Create new</a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<div class="table-responsive card store-card shadow-sm mt-3">
+<table class="table table-sm table-hover mb-0 align-middle">
+    <thead class="table-light">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
@@ -93,3 +97,4 @@
 }
     </tbody>
 </table>
+</div>

@@ -55,9 +55,7 @@ namespace CetBookStore.Controllers
                 }).ToListAsync();
 
 
-            homePageViewModel.RandomBoooks = await context.Books
-                .OrderBy(b => Guid.NewGuid())
-                .Take(6)
+            var allForRandom = await context.Books
                 .Select(b => new BookViewModel
                 {
                     Id = b.Id,
@@ -67,6 +65,7 @@ namespace CetBookStore.Controllers
                     OldPrice = b.PreviousPrice,
                     IsInSale = b.IsInSale
                 }).ToListAsync();
+            homePageViewModel.RandomBoooks = allForRandom.OrderBy(_ => Guid.NewGuid()).Take(6).ToList();
 
             return View(homePageViewModel);
         }

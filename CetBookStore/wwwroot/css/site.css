@@ -1,5 +1,7 @@
 html {
-  font-size: 14px;
+  font-size: 15px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,17 +10,48 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+  margin-bottom: 3rem;
+  background-color: #f5f6f8;
+}
+
+.store-main {
+  min-height: 55vh;
+}
+
+.navbar-brand {
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  #mainNav .navbar-nav .nav-item .nav-link {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+}
+
+.store-footer {
+  font-size: 0.9rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-top: 2rem;
+}
+
+.home-book-cover {
+  height: 160px;
+  object-fit: cover;
+}
+
+.card.store-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.page-heading {
+  margin-bottom: 1.25rem;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.2rem rgba(13, 110, 253, 0.35);
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
