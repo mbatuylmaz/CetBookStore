@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using CetBookStore.Data;
 using CetBookStore.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace CetBookStore.Controllers
 {
@@ -112,7 +114,7 @@ namespace CetBookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Author,Publisher,PageCount,Price,IsInSale,PreviousPrice,PublicationDate,CreatedDate,CategoryId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Author,Publisher,PageCount,Price,IsInSale,PreviousPrice,PublicationDate,CreatedDate,CategoryId,ImageFile")] Book book)
         {
             if (id != book.Id)
             {
@@ -123,7 +125,58 @@ namespace CetBookStore.Controllers
             {
                 try
                 {
-                    _context.Update(book);
+                    var existingBook = await _context.Books.FindAsync(id);
+                    if (existingBook == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingBook.Title = book.Title;
+                    existingBook.Description = book.Description;
+                    existingBook.Author = book.Author;
+                    existingBook.Publisher = book.Publisher;
+                    existingBook.PageCount = book.PageCount;
+                    existingBook.Price = book.Price;
+                    existingBook.IsInSale = book.IsInSale;
+                    existingBook.PreviousPrice = book.PreviousPrice;
+                    existingBook.PublicationDate = book.PublicationDate;
+                    existingBook.CreatedDate = book.CreatedDate;
+                    existingBook.CategoryId = book.CategoryId;
+
+                    if (book.ImageFile != null)
+                    {
+                        if (!string.IsNullOrEmpty(existingBook.ImageUrl))
+                        {
+                            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, "images", existingBook.ImageUrl);
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        var fileExtension = Path.GetExtension(book.ImageFile.FileName);
+                        var newFileName = Guid.NewGuid().ToString("N") + fileExtension;
+                        var newImagePath = Path.Combine(_hostEnvironment.WebRootPath, "images", newFileName);
+
+                        using (var image = Image.FromStream(book.ImageFile.OpenReadStream()))
+                        {
+                            Image imageToSave = image;
+                            if (image.Width > 1024)
+                            {
+                                var newHeight = (int)((double)image.Height / image.Width * 1024);
+                                imageToSave = new Bitmap(image, 1024, newHeight);
+                            }
+                            imageToSave.Save(newImagePath, ImageFormat.Jpeg);
+                            if (imageToSave != image)
+                            {
+                                imageToSave.Dispose();
+                            }
+                        }
+
+                        existingBook.ImageUrl = newFileName;
+                    }
+
+                    _context.Update(existingBook);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
